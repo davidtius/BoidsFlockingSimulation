@@ -17,4 +17,4 @@ A technical simulation exploring Craig Reynolds' 'Boids' algorithm to replicate 
 **Option 2: Open Source Code**
 1.  Clone this repository.
 2.  Open project in **Unity 2021.3.14f1**.
-3.  Open Scene: `Scenes/MainSample`.
+3.  Open Scene: `Scenes/MainScene`.
