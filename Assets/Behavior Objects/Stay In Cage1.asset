@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db0605a1898bb774f86065fe05d285be, type: 3}
+  m_Name: Stay In Cage1
+  m_EditorClassIdentifier: 
+  cage: {fileID: 7891324439929549751, guid: ac669ffce7acc70408bf8fedb72bdc61, type: 3}

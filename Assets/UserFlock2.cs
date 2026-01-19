@@ -1,0 +1,151 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class UserFlock2 : MonoBehaviour
+{
+
+    public FlockAgent agentPrefab;
+    private FlockAgent agent;
+
+    const float agentDensity = 1.5f;
+
+    // move speed
+    [Range(1f, 100f)]
+    public float driveFactor = 10f;
+    [Range(1f, 100f)]
+    public float maxSpeed = 6f;
+    [Range(1f, 10f)]
+    public float neighborRadius = 1.5f;
+    [Range(0f, 1f)]
+    public float avoidanceRadiusMultiplier = 0.5f;
+
+    float squareMaxSpeed;
+    float squareNeighborRadius;
+    float squareAvoidanceRadius;
+    public float SquareAvoidanceRadius { get { return squareAvoidanceRadius; } }
+
+    // Start is called before the first frame update
+    PlayerControls controls;
+    Vector2 PlayerMove;
+    // void Awake() {
+    //     controls = new PlayerControls();
+
+    // }
+
+    private void OnMovePlayer2(InputValue value)
+    {
+        PlayerMove = value.Get<Vector2>();
+        // Debug.Log(PlayerMove);
+    }
+
+    private void OnBoostPlayer2()
+    {
+        maxSpeed = 7f;
+        Debug.Log("boo");
+        move = new Vector2(move.x + Mathf.Sign(move.x) * 2f, move.y + Mathf.Sign(move.y) * 2f);
+        if (move.sqrMagnitude > squareMaxSpeed)
+        {
+            move = move.normalized * maxSpeed;
+        }
+        agent.move(move);
+    }
+
+    void Start()
+    {
+        squareMaxSpeed = maxSpeed * maxSpeed;
+        squareNeighborRadius = neighborRadius * neighborRadius;
+        squareAvoidanceRadius = squareNeighborRadius * avoidanceRadiusMultiplier * avoidanceRadiusMultiplier;
+
+
+        agent = Instantiate(
+            agentPrefab,
+            Random.insideUnitCircle * agentDensity,
+            Quaternion.Euler(Vector3.forward * Random.Range(0f, 360f)),
+            transform
+            );
+        agent.name = "UserFlock";
+        agent.tag = "Player";
+        agent.Initialize(this);
+
+    }
+
+    static Vector2 move = new Vector2(0f, 5f);
+    public Vector2 center;
+
+    // Update is called once per frame
+    void Update()
+    {
+        // Debug.Log(horizontalRight);
+
+        Vector3 mousePos = Input.mousePosition;
+        mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+
+        if (Input.GetKey(KeyCode.Mouse0))
+        {
+            move.x = (mousePos.x - transform.position.x) * driveFactor;
+            move.y = (mousePos.y - transform.position.y) * driveFactor;
+        }
+
+        if (PlayerMove != new Vector2(0, 0))
+        {
+            move = PlayerMove * driveFactor;
+        }
+
+
+        Vector2 centerOffset = center - (Vector2)agent.transform.position;
+        float t = centerOffset.magnitude / 25f;
+        if (t >= 1.5f)
+        {
+            move = centerOffset * t * t;
+        }
+
+        bool key = false;
+        if (Input.GetKey("w") && Input.GetKey("a"))
+        {
+            move = new Vector2(-3.5f, 3.5f);
+            key = true;
+        }
+        else if (Input.GetKey("w") && Input.GetKey("d"))
+        {
+            move = new Vector2(3.5f, 3.5f);
+            key = true;
+        }
+        else if (Input.GetKey("s") && Input.GetKey("a"))
+        {
+            move = new Vector2(-3.5f, -3.5f);
+            key = true;
+        }
+        else if (Input.GetKey("s") && Input.GetKey("d"))
+        {
+            move = new Vector2(3.5f, -3.5f);
+            key = true;
+        }
+        else
+        {
+            move = (Input.GetKey("w")) ? new Vector2(0f, 5f) : (Input.GetKey("s")) ? new Vector2(0f, -5f) : (Input.GetKey("a")) ? new Vector2(-5f, 0f) : (Input.GetKey("d")) ? new Vector2(5f, 0f) : move;
+            key = true;
+        }
+
+        if (Input.GetKey("space"))
+        {
+            maxSpeed = 7f;
+            if (key)
+            {
+                move = new Vector2(move.x + Mathf.Sign(move.x) * 2f, move.y + Mathf.Sign(move.y) * 2f);
+            }
+        }
+        else
+        {
+            maxSpeed = 5f;
+        }
+
+        if (move.sqrMagnitude > squareMaxSpeed)
+        {
+            move = move.normalized * maxSpeed;
+        }
+
+        agent.move(move);
+    }
+}
