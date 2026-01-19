@@ -1,4 +1,4 @@
-# BoidsFlockingSimulation
+# Boids Flocking Simulation
 
 ![Unity](https://img.shields.io/badge/Unity-2021.3.14f1-black?style=flat&logo=unity)
 ![Language](https://img.shields.io/badge/Language-C%23-blue?style=flat&logo=csharp)
